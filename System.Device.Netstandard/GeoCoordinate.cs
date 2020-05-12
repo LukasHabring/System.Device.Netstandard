@@ -11,10 +11,7 @@
 **
 =============================================================================*/
 
-using System;
 using System.Globalization;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 namespace System.Device.Location
 {
@@ -36,44 +33,61 @@ namespace System.Device.Location
         //
         // private constructor for creating single instance of GeoCoordinate.Unknown
         //
-        public GeoCoordinate() {}
+        public GeoCoordinate() { }
 
-        public GeoCoordinate(Double latitude, Double longitude) 
-            : this(latitude, longitude, Double.NaN)
-        {
-        }
-
-        public GeoCoordinate(Double latitude, Double longitude, Double altitude)
-            : this(latitude, longitude, altitude, Double.NaN, Double.NaN, Double.NaN, Double.NaN)
+        public GeoCoordinate(Double latitude, Double longitude)
+            : this(latitude, longitude, Double.NaN, Double.NaN, Double.NaN)
         {
         }
 
         public GeoCoordinate(Double latitude, Double longitude, Double altitude,
             Double horizontalAccuracy, Double verticalAccuracy, Double speed, Double course)
+            : this(latitude, longitude, horizontalAccuracy, altitude, verticalAccuracy)
         {
-            Latitude = latitude;
-            Longitude = longitude;
-
-            Altitude = altitude;
-
-            HorizontalAccuracy = horizontalAccuracy;
-            VerticalAccuracy = verticalAccuracy;
-
             Speed = speed;
             Course = course;
+        }
+
+        public GeoCoordinate(Double latitude, Double longitude, Double horizontalAccuracy, Double altitude, Double verticalAccuracy)
+        {
+            if (Double.IsNaN(latitude) || latitude > 90.0 || latitude < -90.0)
+            {
+                throw new ArgumentOutOfRangeException("latitude", SR.GetString(SR.Argument_MustBeInRangeNegative90to90));
+            }
+
+            if (Double.IsNaN(longitude) || longitude > 180.0 || longitude < -180.0)
+            {
+                throw new ArgumentOutOfRangeException("longitude", SR.GetString(SR.Argument_MustBeInRangeNegative180To180));
+            }
+
+            if (horizontalAccuracy < 0.0)
+            {
+                throw new ArgumentOutOfRangeException("horizontalAccuracy", SR.GetString(SR.Argument_MustBeNonNegative));
+            }
+
+            if (verticalAccuracy < 0.0)
+            {
+                throw new ArgumentOutOfRangeException("verticalAccuracy", SR.GetString(SR.Argument_MustBeNonNegative));
+            }
+
+            horizontalAccuracy = (horizontalAccuracy == 0.0) ? Double.NaN : horizontalAccuracy;
+            verticalAccuracy = (verticalAccuracy == 0.0) ? Double.NaN : verticalAccuracy;
+
+            Latitude = latitude;
+            Longitude = longitude;
+            Altitude = altitude;
+            HorizontalAccuracy = horizontalAccuracy;
+            VerticalAccuracy = verticalAccuracy;
         }
         #endregion
 
         #region Properties
 
-        public Double Latitude 
-        {
-            get
-            {
+        public Double Latitude {
+            get {
                 return m_latitude;
             }
-            set
-            {
+            set {
                 if (value > 90.0 || value < -90.0)
                 {
                     throw new ArgumentOutOfRangeException("Latitude", SR.GetString(SR.Argument_MustBeInRangeNegative90to90));
@@ -82,14 +96,11 @@ namespace System.Device.Location
             }
         }
 
-        public Double Longitude
-        {
-            get
-            {
+        public Double Longitude {
+            get {
                 return m_longitude;
             }
-            set
-            {
+            set {
                 if (value > 180.0 || value < -180.0)
                 {
                     throw new ArgumentOutOfRangeException("Longitude", SR.GetString(SR.Argument_MustBeInRangeNegative180To180));
@@ -98,27 +109,21 @@ namespace System.Device.Location
             }
         }
 
-        public Double Altitude
-        {
-            get
-            {
+        public Double Altitude {
+            get {
                 return m_altitude;
             }
 
-            set
-            {
+            set {
                 m_altitude = value;
             }
         }
 
-        public Double HorizontalAccuracy
-        {
-            get
-            {
+        public Double HorizontalAccuracy {
+            get {
                 return m_horizontalAccuracy;
             }
-            set
-            {
+            set {
                 if (value < 0.0)
                 {
                     throw new ArgumentOutOfRangeException("HorizontalAccuracy", SR.GetString(SR.Argument_MustBeNonNegative));
@@ -127,14 +132,11 @@ namespace System.Device.Location
             }
         }
 
-        public Double VerticalAccuracy 
-        {
-            get
-            {
+        public Double VerticalAccuracy {
+            get {
                 return m_verticalAccuracy;
             }
-            set
-            {
+            set {
                 if (value < 0.0)
                 {
                     throw new ArgumentOutOfRangeException("VerticalAccuracy", SR.GetString(SR.Argument_MustBeNonNegative));
@@ -143,14 +145,11 @@ namespace System.Device.Location
             }
         }
 
-        public Double Speed
-        {
-            get
-            {
+        public Double Speed {
+            get {
                 return m_speed;
             }
-            set
-            {
+            set {
                 if (value < 0.0)
                 {
                     throw new ArgumentOutOfRangeException("speed", SR.GetString(SR.Argument_MustBeNonNegative));
@@ -159,14 +158,11 @@ namespace System.Device.Location
             }
         }
 
-        public Double Course
-        {
-            get
-            {
+        public Double Course {
+            get {
                 return m_course;
             }
-            set
-            {
+            set {
                 if (value < 0.0 || value > 360.0)
                 {
                     throw new ArgumentOutOfRangeException("course", SR.GetString(SR.Argument_MustBeInRangeZeroTo360));
@@ -174,12 +170,10 @@ namespace System.Device.Location
                 m_course = value;
             }
         }
-        
-        public Boolean IsUnknown 
-        {
-            get
-            {
-                return this.Equals(GeoCoordinate.Unknown);
+
+        public Boolean IsUnknown {
+            get {
+                return Equals(GeoCoordinate.Unknown);
             }
         }
 
@@ -191,13 +185,13 @@ namespace System.Device.Location
         {
             //  The Haversine formula according to Dr. Math.
             //  http://mathforum.org/library/drmath/view/51879.html
-                
+
             //  dlon = lon2 - lon1
             //  dlat = lat2 - lat1
             //  a = (sin(dlat/2))^2 + cos(lat1) * cos(lat2) * (sin(dlon/2))^2
             //  c = 2 * atan2(sqrt(a), sqrt(1-a)) 
             //  d = R * c
-                
+
             //  Where
             //    * dlon is the change in longitude
             //    * dlat is the change in latitude
@@ -207,7 +201,7 @@ namespace System.Device.Location
             //        spherical coordinates (longitude and 
             //        latitude) are lon1,lat1 and lon2, lat2.
 
-            if (Double.IsNaN(this.Latitude)  || Double.IsNaN(this.Longitude) ||
+            if (Double.IsNaN(Latitude) || Double.IsNaN(Longitude) ||
                 Double.IsNaN(other.Latitude) || Double.IsNaN(other.Longitude))
             {
                 throw new ArgumentException(SR.GetString(SR.Argument_LatitudeOrLongitudeIsNotANumber));
@@ -215,8 +209,8 @@ namespace System.Device.Location
 
             double dDistance = Double.NaN;
 
-            double dLat1 = this.Latitude * (Math.PI / 180.0);
-            double dLon1 = this.Longitude * (Math.PI / 180.0);
+            double dLat1 = Latitude * (Math.PI / 180.0);
+            double dLon1 = Longitude * (Math.PI / 180.0);
             double dLat2 = other.Latitude * (Math.PI / 180.0);
             double dLon2 = other.Longitude * (Math.PI / 180.0);
 
@@ -224,8 +218,8 @@ namespace System.Device.Location
             double dLat = dLat2 - dLat1;
 
             // Intermediate result a.
-            double a = Math.Pow(Math.Sin(dLat / 2.0), 2.0) + 
-                       Math.Cos(dLat1) * Math.Cos(dLat2) * 
+            double a = Math.Pow(Math.Sin(dLat / 2.0), 2.0) +
+                       Math.Cos(dLat1) * Math.Cos(dLat2) *
                        Math.Pow(Math.Sin(dLon / 2.0), 2.0);
 
             // Intermediate result c (great circle distance in Radians).

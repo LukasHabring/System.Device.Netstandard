@@ -99,26 +99,12 @@ namespace System.Device.Location
         public String FloorLevel { get; private set; }
         public String PostalCode { get; private set; }
         public String StateProvince { get; private set; }
-    }
 
-
-    public interface ICivicAddressResolver 
-    {
-        void ResolveAddressAsync(GeoCoordinate coordinate);
-        event EventHandler<ResolveAddressCompletedEventArgs> ResolveAddressCompleted;
-    }
-
-
-    public class ResolveAddressCompletedEventArgs : AsyncCompletedEventArgs 
-    {
-        public ResolveAddressCompletedEventArgs(CivicAddress address, Exception exception, Boolean cancelled, Object userToken)
-                 : base(exception, cancelled, userToken) 
-        {
-            Address = address;
+        public Boolean IsUnknown {
+            get {
+                return (String.IsNullOrEmpty(AddressLine1) && String.IsNullOrEmpty(AddressLine2) &&
+                        String.IsNullOrEmpty(Building) && String.IsNullOrEmpty(City) && String.IsNullOrEmpty(CountryRegion) && String.IsNullOrEmpty(FloorLevel) && String.IsNullOrEmpty(PostalCode) && String.IsNullOrEmpty(StateProvince));
+            }
         }
-
-        public CivicAddress Address { get; private set;}
-}
-
-
+    }
 }

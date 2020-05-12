@@ -299,7 +299,7 @@ namespace System.Device.Location
         /// </summary>
         /// <param name="reportType"></param>
         /// <param name="locationReport"></param>
-        void ILocationEvents.OnLocationChanged(ref Guid reportType, ILocationReport locationReport)
+        void ILocationEvents.OnPositionChanged(ref Guid reportType, ILocationReport locationReport)
         {
             if (reportType.Equals(LocationReportKey.LatLongReport) ||
                 reportType.Equals(LocationReportKey.CivicAddressReport))
@@ -313,7 +313,7 @@ namespace System.Device.Location
         /// </summary>
         /// <param name="reportType"></param>
         /// <param name="newStatus"></param>
-        void ILocationEvents.OnStatusChanged(ref Guid reportType, ReportStatus newStatus)
+        void ILocationEvents.OnPositionStatusChanged(ref Guid reportType, ReportStatus newStatus)
         {
             if (reportType.Equals(LocationReportKey.LatLongReport) ||
                 reportType.Equals(LocationReportKey.CivicAddressReport))
