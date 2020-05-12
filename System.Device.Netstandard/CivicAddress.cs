@@ -87,7 +87,7 @@ namespace System.Device.Location
 
             if (!hasField)
             {
-                throw new ArgumentException(SR.GetString(SR.Argument_RequiresAtLeastOneNonEmptyStringParameter));
+                throw new ArgumentException(SR2.GetString(SR.Argument_RequiresAtLeastOneNonEmptyStringParameter));
             }
         }
 

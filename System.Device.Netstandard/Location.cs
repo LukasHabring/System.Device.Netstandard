@@ -52,12 +52,12 @@ namespace System.Device.Location
 
             if (heading < 0.0 || heading > 360.0)
             {
-                throw new ArgumentOutOfRangeException("heading", SR.GetString(SR.Argument_MustBeInRangeZeroTo360));
+                throw new ArgumentOutOfRangeException("heading", SR2.GetString(SR.Argument_MustBeInRangeZeroTo360));
             }
 
             if (speed < 0.0)
             {
-                throw new ArgumentOutOfRangeException("speed", SR.GetString(SR.Argument_MustBeNonNegative));
+                throw new ArgumentOutOfRangeException("speed", SR2.GetString(SR.Argument_MustBeNonNegative));
             }
 
             Coordinate = coordinate;

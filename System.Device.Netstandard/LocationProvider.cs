@@ -140,7 +140,7 @@ namespace System.Device.Location
 
                 if (value < 0.0 || Double.IsNaN(value))
                 {
-                    throw new ArgumentOutOfRangeException("value", SR.GetString(SR.Argument_MustBeNonNegative));
+                    throw new ArgumentOutOfRangeException("value", SR2.GetString(SR.Argument_MustBeNonNegative));
                 }
                 m_threshold = value;
             }

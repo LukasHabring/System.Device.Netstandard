@@ -52,22 +52,22 @@ namespace System.Device.Location
         {
             if (Double.IsNaN(latitude) || latitude > 90.0 || latitude < -90.0)
             {
-                throw new ArgumentOutOfRangeException("latitude", SR.GetString(SR.Argument_MustBeInRangeNegative90to90));
+                throw new ArgumentOutOfRangeException("latitude", SR2.GetString(SR.Argument_MustBeInRangeNegative90to90));
             }
 
             if (Double.IsNaN(longitude) || longitude > 180.0 || longitude < -180.0)
             {
-                throw new ArgumentOutOfRangeException("longitude", SR.GetString(SR.Argument_MustBeInRangeNegative180To180));
+                throw new ArgumentOutOfRangeException("longitude", SR2.GetString(SR.Argument_MustBeInRangeNegative180To180));
             }
 
             if (horizontalAccuracy < 0.0)
             {
-                throw new ArgumentOutOfRangeException("horizontalAccuracy", SR.GetString(SR.Argument_MustBeNonNegative));
+                throw new ArgumentOutOfRangeException("horizontalAccuracy", SR2.GetString(SR.Argument_MustBeNonNegative));
             }
 
             if (verticalAccuracy < 0.0)
             {
-                throw new ArgumentOutOfRangeException("verticalAccuracy", SR.GetString(SR.Argument_MustBeNonNegative));
+                throw new ArgumentOutOfRangeException("verticalAccuracy", SR2.GetString(SR.Argument_MustBeNonNegative));
             }
 
             horizontalAccuracy = (horizontalAccuracy == 0.0) ? Double.NaN : horizontalAccuracy;
@@ -90,7 +90,7 @@ namespace System.Device.Location
             set {
                 if (value > 90.0 || value < -90.0)
                 {
-                    throw new ArgumentOutOfRangeException("Latitude", SR.GetString(SR.Argument_MustBeInRangeNegative90to90));
+                    throw new ArgumentOutOfRangeException("Latitude", SR2.GetString(SR.Argument_MustBeInRangeNegative90to90));
                 }
                 m_latitude = value;
             }
@@ -103,7 +103,7 @@ namespace System.Device.Location
             set {
                 if (value > 180.0 || value < -180.0)
                 {
-                    throw new ArgumentOutOfRangeException("Longitude", SR.GetString(SR.Argument_MustBeInRangeNegative180To180));
+                    throw new ArgumentOutOfRangeException("Longitude", SR2.GetString(SR.Argument_MustBeInRangeNegative180To180));
                 }
                 m_longitude = value;
             }
@@ -126,7 +126,7 @@ namespace System.Device.Location
             set {
                 if (value < 0.0)
                 {
-                    throw new ArgumentOutOfRangeException("HorizontalAccuracy", SR.GetString(SR.Argument_MustBeNonNegative));
+                    throw new ArgumentOutOfRangeException("HorizontalAccuracy", SR2.GetString(SR.Argument_MustBeNonNegative));
                 }
                 m_horizontalAccuracy = (value == 0.0) ? Double.NaN : value;
             }
@@ -139,7 +139,7 @@ namespace System.Device.Location
             set {
                 if (value < 0.0)
                 {
-                    throw new ArgumentOutOfRangeException("VerticalAccuracy", SR.GetString(SR.Argument_MustBeNonNegative));
+                    throw new ArgumentOutOfRangeException("VerticalAccuracy", SR2.GetString(SR.Argument_MustBeNonNegative));
                 }
                 m_verticalAccuracy = (value == 0.0) ? Double.NaN : value;
             }
@@ -152,7 +152,7 @@ namespace System.Device.Location
             set {
                 if (value < 0.0)
                 {
-                    throw new ArgumentOutOfRangeException("speed", SR.GetString(SR.Argument_MustBeNonNegative));
+                    throw new ArgumentOutOfRangeException("speed", SR2.GetString(SR.Argument_MustBeNonNegative));
                 }
                 m_speed = value;
             }
@@ -165,7 +165,7 @@ namespace System.Device.Location
             set {
                 if (value < 0.0 || value > 360.0)
                 {
-                    throw new ArgumentOutOfRangeException("course", SR.GetString(SR.Argument_MustBeInRangeZeroTo360));
+                    throw new ArgumentOutOfRangeException("course", SR2.GetString(SR.Argument_MustBeInRangeZeroTo360));
                 }
                 m_course = value;
             }
@@ -204,7 +204,7 @@ namespace System.Device.Location
             if (Double.IsNaN(Latitude) || Double.IsNaN(Longitude) ||
                 Double.IsNaN(other.Latitude) || Double.IsNaN(other.Longitude))
             {
-                throw new ArgumentException(SR.GetString(SR.Argument_LatitudeOrLongitudeIsNotANumber));
+                throw new ArgumentException(SR2.GetString(SR.Argument_LatitudeOrLongitudeIsNotANumber));
             }
 
             double dDistance = Double.NaN;
