@@ -616,9 +616,7 @@ namespace System.Device.Location
                             m_civicAddrRegistered = false;
                         }
                     }
-#if !SILVERLIGHT
-                    Marshal.ReleaseComObject(m_location);
-#endif
+                    m_location.Dispose();
                     m_location = null;
                 }
 

@@ -31,21 +31,10 @@ namespace System.Device.Location.Internal
         [Conditional("DEBUG")]
         public static void Trace(string message)
         {
-#if !SILVERLIGHT
             System.Diagnostics.Trace.WriteLine(message);
-#endif
         }
     }
     #endregion
-
-#if SILVERLIGHT
-    internal enum VarEnum
-    {
-        VT_EMPTY  = 0,
-        VT_R8     = 5,
-        VT_LPWSTR = 8
-    }
-#endif
 
     #region PROPVARIANT
     //
@@ -178,7 +167,6 @@ namespace System.Device.Location.Internal
     /// <summary>
     /// ILocationReport COM interface
     /// </summary>
-    [ComImport, InterfaceType(ComInterfaceType.InterfaceIsIUnknown), Guid("C8B7F7EE-75D0-4DB9-B62D-7A0F369CA456")]
     internal interface ILocationReport
     {
         [PreserveSig]
@@ -194,7 +182,6 @@ namespace System.Device.Location.Internal
     /// <summary>
     /// ILatLongReport COM interface
     /// </summary>
-    [ComImport, InterfaceType(ComInterfaceType.InterfaceIsIUnknown), Guid("7FED806D-0EF8-4F07-80AC-36A0BEAE3134")]
     internal interface ILatLongReport : ILocationReport
     {
         [PreserveSig]
@@ -220,14 +207,9 @@ namespace System.Device.Location.Internal
     /// <summary>
     /// ILocationEvent COM interface
     /// </summary>
-    [ComImport, InterfaceType(ComInterfaceType.InterfaceIsIUnknown), Guid("CAE02BBF-798B-4508-A207-35A7906DC73D")]
     internal interface ILocationEvents
     {
-#if !SILVERLIGHT
         void OnPositionChanged([In] ref Guid reportType, [MarshalAs(UnmanagedType.Interface)] ILocationReport locationReport);
-#else
-        void OnPositionChanged([In] ref Guid reportType, ILocationReport locationReport);
-#endif
         void OnPositionStatusChanged([In] ref Guid reportType, [In] ReportStatus newStatus);
     }
     #endregion
@@ -236,23 +218,14 @@ namespace System.Device.Location.Internal
     /// <summary>
     /// ILocation COM interface
     /// </summary>
-    [ComImport, InterfaceType(ComInterfaceType.InterfaceIsIUnknown), Guid("AB2ECE69-56D9-4F28-B525-DE1B0EE44237")]
-    internal interface ILocation
+    internal interface ILocation : IDisposable
     {
         [PreserveSig]
-#if !SILVERLIGHT
         Int32 RegisterForReport([In, MarshalAs(UnmanagedType.Interface)] ILocationEvents pEvents, [In] ref Guid reportType, [In] uint dwMinReportInterval);
-#else
-        Int32 RegisterForReport([In] ILocationEvents pEvents, [In] ref Guid reportType, [In] uint dwMinReportInterval);
-#endif
         [PreserveSig]
         Int32 UnregisterForReport([In] ref Guid reportType);
         [PreserveSig]
-#if !SILVERLIGHT
         Int32 GetReport([In] ref Guid reportType, [MarshalAs(UnmanagedType.Interface)] out ILocationReport locationReport);
-#else
-        Int32 GetReport([In] ref Guid reportType, out ILocationReport locationReport);
-#endif
         [PreserveSig]
         Int32 GetReportStatus([In] ref Guid reportType, ref ReportStatus reportStatus);
         [PreserveSig]
@@ -269,12 +242,9 @@ namespace System.Device.Location.Internal
     #endregion
 
     #region Location coclass
-    /// <summary>
-    /// COM wrapper for Location object
-    /// </summary>
-    [ComImport, GuidAttribute("E5B8E079-EE6D-4E33-A438-C87F2E959254"), ClassInterfaceAttribute(ClassInterfaceType.None)]
-    internal class COMLocation
+    internal class COMLocation : ILocation
     {
+
     }
     #endregion
 }

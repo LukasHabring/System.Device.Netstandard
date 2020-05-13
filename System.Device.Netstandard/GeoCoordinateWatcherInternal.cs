@@ -85,7 +85,7 @@ namespace System.Device.Location
             {
                 try
                 {
-                    m_location = new COMLocation() as ILocation;
+                    m_location = new COMLocation();
                 }
                 catch (COMException)
                 {
@@ -645,7 +645,6 @@ namespace System.Device.Location
             Interlocked.Decrement(ref m_positionEventsProcessingCount);
         }
         
-#if !SILVERLIGHT
         // On Desktop, SpinWait.SpinUntil is available and we can use that to
         // spin until m_positionEventsProcessingCount is 0. This private method 
         // just checks for that.
@@ -653,36 +652,6 @@ namespace System.Device.Location
         {
             return Volatile.Read(ref m_positionEventsProcessingCount) == 0;
         }
-#else // if SILVERLIGHT is defined
-        // On Silverlight, SpinWait.SpinUntil is NOT available and we cannot use that to
-        // spin until m_positionEventsProcessingCount is 0. Instead we approximate the logic of
-        // spin until with this private method.
-        private void SpinUntil_NoPositionEventsCurrentlyProcessing()
-        {        
-            // Loop until we ae done processing all position events that we already started processing:
-            while (Volatile.Read(ref m_positionEventsProcessingCount) > 0)
-            {
-            
-                // Try a busy wait first:
-                for (Int32 i = 0; i < 3; i++)
-                {
-                    if (Volatile.Read(ref m_positionEventsProcessingCount) == 0)
-                        return;
-                }
-                
-                // Try yielding a few times:
-                for (Int32 i = 0; i < 5; i++)
-                {
-                    Thread.Sleep(1);
-                    if (Volatile.Read(ref m_positionEventsProcessingCount) == 0)
-                        return;
-                }
-            
-                // This seems to take a while. Get off the CPU to allow other stuff to run:
-                Thread.Sleep(100);
-            }                        
-        }        
-#endif  // !SILVERLIGHT
         
         #endregion
 
@@ -720,11 +689,7 @@ namespace System.Device.Location
         [SecuritySafeCritical]
         private void Cleanup()
         {
-#if !SILVERLIGHT
             SpinWait.SpinUntil(NoPositionEventsCurrentlyProcessing);
-#else
-            SpinUntil_NoPositionEventsCurrentlyProcessing();
-#endif  // !SILVERLIGHT
                         
             lock (this.InternalSyncObject)
             {
@@ -750,9 +715,7 @@ namespace System.Device.Location
                             m_civicAddrRegistered = false;
                         }
                     }
-#if !SILVERLIGHT
-                    Marshal.ReleaseComObject(m_location);
-#endif
+                    m_location.Dispose();
                     m_location = null;
                 }
 
